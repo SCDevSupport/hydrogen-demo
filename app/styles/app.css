@@ -1,3 +1,4 @@
+
 :root {
   --aside-width: 400px;
   --cart-aside-summary-height-with-discount: 300px;
@@ -6,6 +7,10 @@
   --header-height: 64px;
   --color-dark: #000;
   --color-light: #fff;
+}
+
+.bg-blue-custom{
+  background-color: blue;
 }
 
 img {
@@ -471,3 +476,7 @@ aside li {
 .account-logout {
   display: inline-block;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

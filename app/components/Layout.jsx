@@ -4,6 +4,7 @@ import {Aside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/Cart';
+import {Annoucementbar} from '~/components/Annoucementbar';
 import {
   PredictiveSearchForm,
   PredictiveSearchResults,
@@ -12,9 +13,10 @@ import {
 /**
  * @param {LayoutProps}
  */
-export function Layout({cart, children = null, footer, header, isLoggedIn}) {
+export function Layout({cart, children = null, footer, announcementbar, header, isLoggedIn}) {
   return (
     <>
+      {announcementbar.metaobjects.edges.length > 0 ? (<Annoucementbar announcementbar={announcementbar} />) : null}      
       <CartAside cart={cart} />
       <SearchAside />
       <MobileMenuAside menu={header?.menu} shop={header?.shop} />

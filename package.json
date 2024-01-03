@@ -5,8 +5,8 @@
   "version": "1.0.1",
   "scripts": {
     "build": "shopify hydrogen build",
-    "dev": "shopify hydrogen dev --worker --codegen",
-    "preview": "npm run build && shopify hydrogen preview --worker",
+    "dev": "shopify hydrogen dev --port=1111 --worker",
+    "preview": "npm run build && shopify hydrogen preview --port=2222 --worker",
     "lint": "eslint --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx .",
     "codegen": "shopify hydrogen codegen"
   },
@@ -22,7 +22,8 @@
     "graphql-tag": "^2.12.6",
     "isbot": "^3.6.6",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "swiper": "^11.0.5"
   },
   "devDependencies": {
     "@remix-run/dev": "2.1.0",

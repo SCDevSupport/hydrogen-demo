@@ -8,9 +8,11 @@ import {useRootLoaderData} from '~/root';
 export function Header({header, isLoggedIn, cart}) {
   const {shop, menu} = header;
   return (
-    <header className="header">
+    <header className="header bg-blue-800 text-white">
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
+        {shop.brand.logo != null ? (
+          <img src={shop.brand.logo.image.url} />
+        ) : (<strong>{shop.name}</strong>)  }
       </NavLink>
       <HeaderMenu
         menu={menu}
@@ -31,7 +33,7 @@ export function Header({header, isLoggedIn, cart}) {
  */
 export function HeaderMenu({menu, primaryDomainUrl, viewport}) {
   const {publicStoreDomain} = useRootLoaderData();
-  const className = `header-menu-${viewport}`;
+  const className = `header-menu-${viewport} text-white`;
 
   function closeAside(event) {
     if (viewport === 'mobile') {
@@ -183,7 +185,7 @@ const FALLBACK_HEADER_MENU = {
 function activeLinkStyle({isActive, isPending}) {
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
+    color: isPending ? 'white' : 'white',
   };
 }
 

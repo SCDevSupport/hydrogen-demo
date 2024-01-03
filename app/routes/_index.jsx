@@ -2,6 +2,8 @@ import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
+import { Swiper, SwiperSlide } from "swiper/react";
+import {Autoplay, Navigation} from 'swiper/modules';
 
 /**
  * @type {MetaFunction}
@@ -18,8 +20,9 @@ export async function loader({context}) {
   const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
   const featuredCollection = collections.nodes[0];
   const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
+  const bannerDetail = await storefront.query(BANNER_DETAIL_QUERY);
 
-  return defer({featuredCollection, recommendedProducts});
+  return defer({featuredCollection, recommendedProducts, bannerDetail});
 }
 
 export default function Homepage() {
@@ -27,6 +30,7 @@ export default function Homepage() {
   const data = useLoaderData();
   return (
     <div className="home">
+      <Herobanner bannerData={data.bannerDetail}/>
       <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
@@ -95,6 +99,42 @@ function RecommendedProducts({products}) {
   );
 }
 
+function Herobanner(bannerData){
+  var flagReturn = true;
+  if(typeof (bannerData.bannerData.metaobject) == "undefined" && bannerData.bannerData.metaobject == null){
+    flagReturn = false;
+  }
+  if(flagReturn){
+    var bannerImageDetail = bannerData.bannerData.metaobject.fields[0].references.nodes;    
+    
+    var sliderData = [];    
+    bannerImageDetail.forEach((bannerImage) => {
+        sliderData.push(
+          <SwiperSlide key = {bannerImage.id}>
+            <img src={bannerImage.previewImage.url} />
+          </SwiperSlide>          
+        );
+    });
+    return(          
+      <Swiper        
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+        }}
+        navigation={false}
+        modules={[Autoplay, Navigation]}
+        className="mySwiper"
+        >    
+        {sliderData}    
+      </Swiper>
+    
+    );
+  }
+  else{
+    return null;
+  }
+}
+
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {
     id
@@ -147,6 +187,30 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
       }
     }
   }
+`;
+
+const BANNER_DETAIL_QUERY = `#graphql    
+  query BannerDetail {
+  metaobject(
+    handle: {handle: "home-page-banner-ewlunpff", type: "home_page_banner"}
+  ) {
+    fields {
+      key
+      type
+      value
+      references(first: 10) {
+        nodes {
+          ... on MediaImage {
+            id
+            previewImage {
+              url(transform: {})
+            }
+          }
+        }
+      }
+    }
+  }
+}
 `;
 
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */

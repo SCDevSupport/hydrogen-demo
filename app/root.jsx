@@ -15,8 +15,9 @@ import {
 import favicon from '../public/favicon.svg';
 import resetStyles from './styles/reset.css';
 import appStyles from './styles/app.css';
+//import styleDetail from './styles/SlickSlider.module.scss';
 import {Layout} from '~/components/Layout';
-
+import styleDetail from "./styles/slider.css";
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
  * @type {ShouldRevalidateFunction}
@@ -39,6 +40,7 @@ export function links() {
   return [
     {rel: 'stylesheet', href: resetStyles},
     {rel: 'stylesheet', href: appStyles},
+    {rel: 'stylesheet', href: styleDetail},
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com',
@@ -91,11 +93,14 @@ export async function loader({context}) {
       headerMenuHandle: 'main-menu', // Adjust to your header menu handle
     },
   });
+  const announcementbarPromise = storefront.query(ANNOUNCEMENT_QUERY);
+  
 
   return defer(
     {
       cart: cartPromise,
       footer: footerPromise,
+      announcementbar : await announcementbarPromise,
       header: await headerPromise,
       isLoggedIn,
       publicStoreDomain,
@@ -274,6 +279,26 @@ const FOOTER_QUERY = `#graphql
     }
   }
   ${MENU_FRAGMENT}
+`;
+
+const ANNOUNCEMENT_QUERY = `#graphql
+  fragment announcement on MetaobjectEdge{
+    node{
+      id
+      fields {
+        value
+        type
+        key
+      }
+    }
+  }
+  query announcementBar {
+    metaobjects(type: "announcement_bar", first: 10) {
+      edges{
+        ...announcement
+      }
+    }
+  }
 `;
 
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
