@@ -35,18 +35,18 @@ export function Annoucementbar({announcementbar}) {
   })
   return (
     <>
-    <div>
-      <Swiper        
-        autoplay={{
-          delay: 2000,
-          disableOnInteraction: true,
-        }}
-        modules={[Autoplay, Navigation]}
-        className="mySwiper"
-        >    
-        {sliderData}
-      </Swiper>
-    </div>
+      <div>
+        <Swiper        
+          autoplay={{
+            delay: 2000,
+            disableOnInteraction: true,
+          }}
+          modules={[Autoplay, Navigation]}
+          className="mySwiper"
+          >    
+          {sliderData}
+        </Swiper>
+      </div>
     </>
   );
 }
